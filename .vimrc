@@ -1,4 +1,4 @@
-" .vimrc v1.1 - Andre Ogle
+" .vimrc v1.2 - Andre Ogle
 " This is my vimrc file. I've tried to build this from the ground up - without copying someone else's vimrc. 
 " I will try to keep each setting documented. Feel free to use/copy it. Let me know if you like it.
 " Last Updated: 11 December 2014
@@ -25,6 +25,9 @@ set ignorecase                  		" searches are case insensitive...
 set smartcase                   		" ... unless they contain at least one capital letter
 nnoremap <silent> <C-l> :nohl<CR><C-l>  " <Ctrl-l> redraws the screen and removes any search highlighting.
 
+"" Keybindings
+let mapleader=","						" change <leader> to ',' instead of '\'
+
 "---------------------------------------------------------------
 "							Plugins
 "---------------------------------------------------------------
@@ -38,6 +41,9 @@ Plugin 'scrooloose/nerdtree'			" View directory as a sidebar
 Plugin 'sickill/vim-monokai'			" Colour theme for Vim
 Plugin 'kien/ctrlp.vim'					" Fuzzy file searching
 Plugin 'bling/vim-airline'				" A cooler status bar at the bottom
+Plugin 'tpope/vim-endwise'				" Add 'end' after 'if', 'do', 'def' keywords
+Plugin 'thoughtbot/vim-rspec'			" Run RSpec tests in Vim
+Plugin 'tpope/vim-surround'				" Easily surround words with tags
 
 call vundle#end()            			" required for Vundle
 filetype plugin indent on    			" required for Vundle
@@ -66,6 +72,11 @@ autocmd VimEnter * wincmd p						" Set cursor to active buffer
 " Airline
 let g:airline_theme='luna'
 
+" vim-rspec
+map <Leader>t :call RunCurrentSpecFile()<CR>	" Run current spec
+map <Leader>s :call RunNearestSpec()<CR>		" Run nearest spec
+map <Leader>l :call RunLastSpec()<CR>			" Run last spec
+map <Leader>a :call RunAllSpecs()<CR>			" Run all specs
 
 
 
