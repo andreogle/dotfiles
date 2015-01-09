@@ -25,5 +25,7 @@ echo "...done"
 # move any existing dotfiles in homedir to dotfiles_old directory, then create symlinks 
 echo "Moving any existing dotfiles from ~ to $olddir"
 mv ~/.vimrc ~/dotfiles_old/
+mv ~/.gvimrc ~/dotfiles_old/
 echo "Creating symlink to $file in home directory."
 ln -sf ~/dotfiles/.vimrc ~/.vimrc
+ln -sf ~/dotfiles/.gvimrc ~/.gvimrc

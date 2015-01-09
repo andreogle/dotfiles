@@ -44,6 +44,7 @@ Plugin 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keyw
 Plugin 'thoughtbot/vim-rspec'           " Run RSpec tests in Vim
 Plugin 'tpope/vim-surround'             " Easily surround words with tags
 Plugin 'airblade/vim-gitgutter'         " Show git changes in the gutter
+Plugin 'mxw/vim-jsx'                    " JSX highlighting for Reactjs"
       
 call vundle#end()                       " required for Vundle
 filetype plugin indent on               " required for Vundle
@@ -78,9 +79,10 @@ map <Leader>s :call RunNearestSpec()<CR>      " Run nearest spec
 map <Leader>l :call RunLastSpec()<CR>         " Run last spec
 map <Leader>a :call RunAllSpecs()<CR>         " Run all specs
 
+" Git-Gutter
+let g:gitgutter_enabled = 1
+
 "---------------------------------------------------------------
 "           Key bindings
 "---------------------------------------------------------------
-map <D-t> :CtrlP<CR>
-map <D-n> :NERDtree<CR>
 
