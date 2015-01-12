@@ -1,7 +1,7 @@
 " Andre Ogle
 " This is my vimrc file. I've tried to build this from the ground up - without copying someone else's vimrc. 
 " I will try to keep each setting documented. Feel free to use/copy it. Let me know if you like it.
-" Last Updated: 9 January 2014
+" Last Updated: 12 January 2014
 
 "---------------------------------------------------------------
 "           General Settings
@@ -45,6 +45,8 @@ Plugin 'thoughtbot/vim-rspec'           " Run RSpec tests in Vim
 Plugin 'tpope/vim-surround'             " Easily surround words with tags
 Plugin 'airblade/vim-gitgutter'         " Show git changes in the gutter
 Plugin 'mxw/vim-jsx'                    " JSX highlighting for Reactjs"
+Plugin 'vim-scripts/vim-auto-save'      " Autosave file changes
+Plugin 'wesQ3/vim-windowswap'           " Easy swapping of windows
       
 call vundle#end()                       " required for Vundle
 filetype plugin indent on               " required for Vundle
@@ -81,6 +83,9 @@ map <Leader>a :call RunAllSpecs()<CR>         " Run all specs
 
 " Git-Gutter
 let g:gitgutter_enabled = 1
+
+" AutoSave
+let g:auto_save = 1 
 
 "---------------------------------------------------------------
 "           Key bindings
