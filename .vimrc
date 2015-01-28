@@ -7,11 +7,9 @@
 "           General Settings
 "---------------------------------------------------------------
 set nocompatible                    " choose no compatibility with legacy vi
-syntax enable
 
 set encoding=utf-8
 set showcmd                         " display incomplete commands
-filetype plugin indent on           " load file type plugins + indentation
 set number
 
 "" Whitespace
@@ -38,6 +36,9 @@ set backupdir=~/.vim/backup//
 set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
 
+" Strip all whitespace on save
+autocmd BufWrite * :%s/\s\+$//e
+
 "---------------------------------------------------------------
 "             Plugins
 "---------------------------------------------------------------
@@ -51,8 +52,9 @@ Plugin 'sickill/vim-monokai'            " Colour theme for Vim
 Plugin 'bling/vim-airline'              " A cooler status bar at the bottom
 Plugin 'airblade/vim-gitgutter'         " Show git changes in the gutter
 Plugin 'mxw/vim-jsx'                    " JSX highlighting for Reactjs
-Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'gorodinskiy/vim-coloresque'     " Highlight colours in stylesheets
+Plugin 'kien/rainbow_parentheses.vim'   " Colourful parentheses
+Plugin 'kchmck/vim-coffee-script'       " Coffeescript syntax
+Plugin 'slim-template/vim-slim'
 "Plugin 'Yggdroot/indentLine'            " Show vertical lines
 
 " General
@@ -61,7 +63,9 @@ Plugin 'scrooloose/nerdtree'            " View directory as a sidebar
 Plugin 'tpope/vim-surround'             " Easily surround words with tags
 Plugin 'vim-scripts/vim-auto-save'      " Autosave file changes
 Plugin 'wesQ3/vim-windowswap'           " Easy swapping of windows
-Plugin 'jistr/vim-nerdtree-tabs'        " Making NERDTree better§
+Plugin 'jistr/vim-nerdtree-tabs'        " Making NERDTree better
+Plugin 'rking/ag.vim'                   " Searching text across file directory
+Plugin 'scrooloose/syntastic'           " Syntax checking for various languages
 
 " Ruby/Rails
 Plugin 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
@@ -81,6 +85,9 @@ colorscheme monokai
 "---------------------------------------------------------------
 "           Plugin Settings
 "---------------------------------------------------------------
+syntax enable
+filetype plugin indent on               " load file type plugins + indentation
+
 " CtrlP
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
@@ -138,6 +145,24 @@ let g:rbpt_max = 16
 
 " indentLine
 "let g:indentLine_char = '︙'
+
+" ag.vim
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
+
+" bind K to grep word under cursor
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+
+nmap <silent> <RIGHT> :cnext<CR>
+nmap <silent> <LEFT> :cprev<CR>
 
 "---------------------------------------------------------------
 "           Key bindings
