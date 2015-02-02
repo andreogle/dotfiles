@@ -1,7 +1,6 @@
 " Andre Ogle
 " This is my vimrc file. I've tried to build this from the ground up - without copying someone else's vimrc.
 " I will try to keep each setting documented. Feel free to use/copy it. Let me know if you like it.
-" Last Updated: 12 January 2014
 
 "---------------------------------------------------------------
 "           General Settings
@@ -12,7 +11,7 @@ set encoding=utf-8
 set showcmd                         " display incomplete commands
 set number
 
-"" Whitespace
+"" Spacing
 set nowrap                          " don't wrap lines
 set tabstop=2 shiftwidth=2          " a tab is two spaces (or set this to 4)
 set expandtab                       " use spaces, not tabs (optional)
@@ -31,13 +30,22 @@ nnoremap <silent> <C-l> :nohl<CR><C-l>  " <Ctrl-l> redraws the screen and remove
 "" Keybindings
 let mapleader=","                   " change <leader> to ',' instead of '\'
 
-" Set Backup folders for annoying temp files
+"" Set Backup folders for annoying temp files
 set backupdir=~/.vim/backup//
 set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
 
-" Strip all whitespace on save
-autocmd BufWrite * :%s/\s\+$//e
+"" Strip all whitespace on save
+autocmd BufWritePre * :%s/\s\+$//e
+
+"" Only strip whitespace when needed (no \ at the end of the line)
+set wrap
+set linebreak
+" note trailing space at end of next line
+set showbreak=>\ \ \
+
+"" Use system clipboard
+"set clipboard=unnamedplus
 
 "---------------------------------------------------------------
 "             Plugins
@@ -54,8 +62,9 @@ Plugin 'airblade/vim-gitgutter'         " Show git changes in the gutter
 Plugin 'mxw/vim-jsx'                    " JSX highlighting for Reactjs
 Plugin 'kien/rainbow_parentheses.vim'   " Colourful parentheses
 Plugin 'kchmck/vim-coffee-script'       " Coffeescript syntax
-Plugin 'slim-template/vim-slim'
-"Plugin 'Yggdroot/indentLine'            " Show vertical lines
+Plugin 'slim-template/vim-slim'         " Vim slim support
+Plugin 'bronson/vim-trailing-whitespace' " Highlight trailing whitespace
+Plugin 'Yggdroot/indentLine'            " Show vertical lines
 
 " General
 Plugin 'kien/ctrlp.vim'                 " Fuzzy file searching
@@ -79,7 +88,7 @@ filetype plugin indent on               " required for Vundle
 "             Display
 "---------------------------------------------------------------
 set anti enc=utf-8
-set guifont=Droid\ Sans\ Mono:h13
+set guifont=Droid\ Sans\ Mono:h14
 colorscheme monokai
 
 "---------------------------------------------------------------
@@ -88,36 +97,35 @@ colorscheme monokai
 syntax enable
 filetype plugin indent on               " load file type plugins + indentation
 
-" CtrlP
+"" CtrlP
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 0       " Only search the directory we started Vim in
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip      " Linux/MacOSX
 set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe   " Windows
 
-" NERDTree
+"" NERDTree
+let NERDTreeShowHidden=1
 autocmd VimEnter * NERDTree            " Start NERDTree on Vim startup
 autocmd VimEnter * wincmd p            " Set cursor to active buffer
 map <leader>r :NERDTreeFind<cr>
 
-" Airline
+"" Airline
 let g:airline_theme='luna'
 
-" vim-rspec
+"" vim-rspec
 map <Leader>t :call RunCurrentSpecFile()<CR>  " Run current spec
-map <Leader>s :call RunNearestSpec()<CR>      " Run nearest spec
-map <Leader>l :call RunLastSpec()<CR>         " Run last spec
 map <Leader>a :call RunAllSpecs()<CR>         " Run all specs
 
-" Git-Gutter
+"" Git-Gutter
 let g:gitgutter_enabled = 1
 
-" AutoSave
+"" AutoSave
 let g:auto_save = 1
 let g:auto_save_in_insert_mode = 0
 let g:auto_save_silent = 1
 
-" Rainbow Parentheses - Start on Vim startup
+"" Rainbow Parentheses - Start on Vim startup
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
@@ -143,10 +151,10 @@ let g:rbpt_colorpairs = [
     \ ]
 let g:rbpt_max = 16
 
-" indentLine
-"let g:indentLine_char = '︙'
+"" indentLine
+let g:indentLine_char = '|'
 
-" ag.vim
+"" ag.vim
 if executable('ag')
   " Use ag over grep
   set grepprg=ag\ --nogroup\ --nocolor
@@ -158,11 +166,24 @@ if executable('ag')
   let g:ctrlp_use_caching = 0
 endif
 
-" bind K to grep word under cursor
+" use K to grep word under cursor
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 nmap <silent> <RIGHT> :cnext<CR>
 nmap <silent> <LEFT> :cprev<CR>
+
+"" Syntastic
+" Use MRI and Rubocop checkers for Ruby files
+let g:syntastic_ruby_checkers = ['rubocop', 'mri']
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
 
 "---------------------------------------------------------------
 "           Key bindings
