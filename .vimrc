@@ -21,11 +21,11 @@ set backspace=indent,eol,start      " backspace through everything in insert mod
 execute "set colorcolumn=" . join(range(81,335), ',')
 
 "" Searching
-set hlsearch                        " highlight matches
-set incsearch                       " incremental searching
-set ignorecase                      " searches are case insensitive...
-set smartcase                       " ... unless they contain at least one capital letter
-nnoremap <silent> <C-l> :nohl<CR><C-l>  " <Ctrl-l> redraws the screen and removes any search highlighting.
+set hlsearch                            " highlight matches
+set incsearch                           " incremental searching
+set ignorecase                          " searches are case insensitive...
+set smartcase                           " ... unless they contain at least one capital letter
+nnoremap <silent> <C-a> :nohl<CR><C-l>  " <Ctrl-l> redraws the screen and removes any search highlighting.
 
 "" Keybindings
 let mapleader=","                   " change <leader> to ',' instead of '\'
@@ -35,17 +35,11 @@ set backupdir=~/.vim/backup//
 set directory=~/.vim/swap//
 set undodir=~/.vim/undo//
 
-"" Strip all whitespace on save
-autocmd BufWritePre * :%s/\s\+$//e
-
-"" Only strip whitespace when needed (no \ at the end of the line)
-set wrap
-set linebreak
-" note trailing space at end of next line
-set showbreak=>\ \ \
-
 "" Use system clipboard
 "set clipboard=unnamedplus
+
+"" Paste the same text multiple times using p
+xnoremap p pgvy
 
 "---------------------------------------------------------------
 "             Plugins
@@ -59,27 +53,32 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'sickill/vim-monokai'            " Colour theme for Vim
 Plugin 'bling/vim-airline'              " A cooler status bar at the bottom
 Plugin 'airblade/vim-gitgutter'         " Show git changes in the gutter
-Plugin 'mxw/vim-jsx'                    " JSX highlighting for Reactjs
 Plugin 'kien/rainbow_parentheses.vim'   " Colourful parentheses
 Plugin 'kchmck/vim-coffee-script'       " Coffeescript syntax
 Plugin 'slim-template/vim-slim'         " Vim slim support
 Plugin 'bronson/vim-trailing-whitespace' " Highlight trailing whitespace
-Plugin 'Yggdroot/indentLine'            " Show vertical lines
+Plugin 'Yggdroot/indentLine'            " Show vertical indent lines
 
 " General
 Plugin 'kien/ctrlp.vim'                 " Fuzzy file searching
 Plugin 'scrooloose/nerdtree'            " View directory as a sidebar
 Plugin 'tpope/vim-surround'             " Easily surround words with tags
-Plugin 'vim-scripts/vim-auto-save'      " Autosave file changes
 Plugin 'wesQ3/vim-windowswap'           " Easy swapping of windows
 Plugin 'jistr/vim-nerdtree-tabs'        " Making NERDTree better
 Plugin 'rking/ag.vim'                   " Searching text across file directory
 Plugin 'scrooloose/syntastic'           " Syntax checking for various languages
+Plugin 'Raimondi/delimitMate'           " Auto-complete brackets, parentheseses etc
+Plugin 'vim-scripts/vim-auto-save'      " Autosave file changes
+Plugin 'Valloric/YouCompleteMe'         " Autocomplete!
 
 " Ruby/Rails
 Plugin 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
 Plugin 'thoughtbot/vim-rspec'           " Run RSpec tests in Vim
 Plugin 'tpope/vim-rails'                " Rails support in Vim!
+
+" JavaScript
+Plugin 'pangloss/vim-javascript'        " JavaScript highlighting
+Plugin 'mxw/vim-jsx'                    " JSX highlighting for Reactjs
 
 call vundle#end()                       " required for Vundle
 filetype plugin indent on               " required for Vundle
@@ -112,10 +111,6 @@ map <leader>r :NERDTreeFind<cr>
 
 "" Airline
 let g:airline_theme='luna'
-
-"" vim-rspec
-map <Leader>t :call RunCurrentSpecFile()<CR>  " Run current spec
-map <Leader>a :call RunAllSpecs()<CR>         " Run all specs
 
 "" Git-Gutter
 let g:gitgutter_enabled = 1
@@ -185,9 +180,23 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
+nnoremap <leader>z :SyntasticCheck<CR>
+nnoremap <leader>c :SyntasticReset<CR>    " Scan file again for syntax erors
+nnoremap <leader>v :Errors<CR>            " Show errors
+nnoremap <leader>b :lclose<CR>            " Hide errors
+
+"" YouCompleteMe
+let g:ycm_add_preview_to_completeopt=0
+let g:ycm_confirm_extra_conf=0
+set completeopt-=preview
+
 "---------------------------------------------------------------
-"           Key bindings
+"           Other Key bindings
 "---------------------------------------------------------------
 " Easier window splitting
 nnoremap <leader>s :vsplit<CR>
 nnoremap <leader>hs :split<CR>
+
+map  <C-l> :tabn<CR>                   " Next tab
+map  <C-h> :tabp<CR>                   " Previous tab
+map  <C-n> :tabnew<CR>                 " New tab
