@@ -113,6 +113,10 @@ let g:airline_theme='luna'
 "" Git-Gutter
 let g:gitgutter_enabled = 1
 
+"" vim-fugitive
+nnoremap <space>gs :Gstatus<CR>
+nnoremap <space>gb :Gblame<CR>
+
 "" AutoSave
 let g:auto_save = 1
 let g:auto_save_in_insert_mode = 0
