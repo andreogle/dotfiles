@@ -67,6 +67,7 @@ Plugin 'Raimondi/delimitMate'           " Auto-complete brackets, parentheseses 
 Plugin 'vim-scripts/vim-auto-save'      " Autosave file changes
 Plugin 'Valloric/YouCompleteMe'         " Autocomplete!
 Plugin 'tomtom/tcomment_vim'            " Easier commenting
+Plugin 'tpope/vim-fugitive'             " Git integration
 
 " Ruby/Rails
 Plugin 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
