@@ -1,7 +1,3 @@
-" Andre Ogle
-" This is my vimrc file. I've tried to build this from the ground up - without copying someone else's vimrc.
-" I will try to keep each setting documented. Feel free to use/copy it. Let me know if you like it.
-
 "---------------------------------------------------------------
 "           General Settings
 "---------------------------------------------------------------
@@ -16,9 +12,6 @@ set nowrap                          " don't wrap lines
 set tabstop=2 shiftwidth=2          " a tab is two spaces (or set this to 4)
 set expandtab                       " use spaces, not tabs (optional)
 set backspace=indent,eol,start      " backspace through everything in insert mode
-
-"" Change background for any lines after 80
-execute "set colorcolumn=" . join(range(81,335), ',')
 
 "" Searching
 set hlsearch                            " highlight matches
@@ -49,14 +42,17 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
 
+" Colour Schemes
+Plugin 'sickill/vim-monokai'
+Plugin 'nanotech/jellybeans.vim'
+
 " Aesthetics
-Plugin 'sickill/vim-monokai'            " Colour theme for Vim
 Plugin 'bling/vim-airline'              " A cooler status bar at the bottom
 Plugin 'airblade/vim-gitgutter'         " Show git changes in the gutter
 Plugin 'kien/rainbow_parentheses.vim'   " Colourful parentheses
 Plugin 'kchmck/vim-coffee-script'       " Coffeescript syntax
 Plugin 'slim-template/vim-slim'         " Vim slim support
-Plugin 'bronson/vim-trailing-whitespace' " Highlight trailing whitespace
+Plugin 'ntpeters/vim-better-whitespace' " Highlight trailing whitespace
 Plugin 'Yggdroot/indentLine'            " Show vertical indent lines
 
 " General
@@ -70,11 +66,12 @@ Plugin 'scrooloose/syntastic'           " Syntax checking for various languages
 Plugin 'Raimondi/delimitMate'           " Auto-complete brackets, parentheseses etc
 Plugin 'vim-scripts/vim-auto-save'      " Autosave file changes
 Plugin 'Valloric/YouCompleteMe'         " Autocomplete!
+Plugin 'tomtom/tcomment_vim'            " Easier commenting
 
 " Ruby/Rails
 Plugin 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
 Plugin 'thoughtbot/vim-rspec'           " Run RSpec tests in Vim
-Plugin 'tpope/vim-rails'                " Rails support in Vim!
+Plugin 'tpope/vim-rails'                " Rails support in Vim
 
 " JavaScript
 Plugin 'pangloss/vim-javascript'        " JavaScript highlighting
@@ -87,7 +84,7 @@ filetype plugin indent on               " required for Vundle
 "             Display
 "---------------------------------------------------------------
 set anti enc=utf-8
-set guifont=Droid\ Sans\ Mono:h14
+set guifont=Droid\ Sans\ Mono:h15
 colorscheme monokai
 
 "---------------------------------------------------------------
@@ -120,31 +117,15 @@ let g:auto_save = 1
 let g:auto_save_in_insert_mode = 0
 let g:auto_save_silent = 1
 
+"" vim-better-whitespace
+hi ExtraWhitespace ctermbg=red guibg=red
+nnoremap <leader>v :StripWhitespace<CR>
+
 "" Rainbow Parentheses - Start on Vim startup
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
-
-let g:rbpt_colorpairs = [
-    \ ['brown',       'RoyalBlue3'],
-    \ ['Darkblue',    'SeaGreen3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkgreen',   'firebrick3'],
-    \ ['darkcyan',    'RoyalBlue3'],
-    \ ['darkred',     'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['brown',       'firebrick3'],
-    \ ['gray',        'RoyalBlue3'],
-    \ ['black',       'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['Darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkred',     'DarkOrchid3'],
-    \ ['red',         'firebrick3'],
-    \ ]
-let g:rbpt_max = 16
 
 "" indentLine
 let g:indentLine_char = '|'
@@ -182,8 +163,6 @@ let g:syntastic_check_on_wq = 0
 
 nnoremap <leader>z :SyntasticCheck<CR>
 nnoremap <leader>c :SyntasticReset<CR>    " Scan file again for syntax erors
-nnoremap <leader>v :Errors<CR>            " Show errors
-nnoremap <leader>b :lclose<CR>            " Hide errors
 
 "" YouCompleteMe
 let g:ycm_add_preview_to_completeopt=0
@@ -191,12 +170,26 @@ let g:ycm_confirm_extra_conf=0
 set completeopt-=preview
 
 "---------------------------------------------------------------
-"           Other Key bindings
+"           Other Key bindings and Settings
 "---------------------------------------------------------------
+"" Change background for any lines after 80
+execute "set colorcolumn=" . join(range(81,335), ',')
+" Enable below for jellybeans colour scheme
+" hi ColorColumn ctermbg=darkgray guibg=gray15
+
 " Easier window splitting
-nnoremap <leader>s :vsplit<CR>
-nnoremap <leader>hs :split<CR>
+set splitbelow                         " Sets focus in new bottom window
+set splitright                         " Sets focus in new right window
+
+nnoremap <leader>s :vsplit<CR>         " Vertical split on the right side
+nnoremap <leader>hs :split<CR>         " Horizontal split on the bottom
 
 map  <C-l> :tabn<CR>                   " Next tab
 map  <C-h> :tabp<CR>                   " Previous tab
 map  <C-n> :tabnew<CR>                 " New tab
+
+map <C-b> i<Cr><Esc>                   " Move text after cursor to next line
+
+" Retain selection when indenting
+vnoremap < <gv
+vnoremap > >gv
