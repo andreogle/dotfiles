@@ -26,6 +26,9 @@ echo "...done"
 echo "Moving any existing dotfiles from ~ to $olddir"
 mv ~/.vimrc ~/dotfiles_old/
 mv ~/.gvimrc ~/dotfiles_old/
+mv ~/.jshintrc ~/dotfiles_old/
+mv ~/.eslintrc ~/dotfiles_old/
 echo "Creating symlink to $file in home directory."
 ln -sf ~/dotfiles/.vimrc ~/.vimrc
 ln -sf ~/dotfiles/.gvimrc ~/.gvimrc
+ln -sf ~/dotfiles/.eslintrc ~/.eslintrc

@@ -3,6 +3,8 @@
 "---------------------------------------------------------------
 set nocompatible                    " choose no compatibility with legacy vi
 
+set shell=/bin/sh
+
 set encoding=utf-8
 set showcmd                         " display incomplete commands
 set number
@@ -18,7 +20,7 @@ set hlsearch                            " highlight matches
 set incsearch                           " incremental searching
 set ignorecase                          " searches are case insensitive...
 set smartcase                           " ... unless they contain at least one capital letter
-nnoremap <silent> <C-a> :nohl<CR><C-l>  " <Ctrl-l> redraws the screen and removes any search highlighting.
+nnoremap <silent> <C-a> :nohl<CR><C-l>  " <Ctrl-a> redraws the screen and removes any search highlighting.
 
 "" Keybindings
 let mapleader=","                   " change <leader> to ',' instead of '\'
@@ -33,6 +35,12 @@ set undodir=~/.vim/undo//
 
 "" Paste the same text multiple times using p
 xnoremap p pgvy
+
+"" Automatically update vim when .vimrc is saved
+augroup myvimrchooks
+    au!
+    autocmd bufwritepost .vimrc source ~/.vimrc
+augroup END
 
 "---------------------------------------------------------------
 "             Plugins
@@ -54,6 +62,7 @@ Plugin 'kchmck/vim-coffee-script'       " Coffeescript syntax
 Plugin 'slim-template/vim-slim'         " Vim slim support
 Plugin 'ntpeters/vim-better-whitespace' " Highlight trailing whitespace
 Plugin 'Yggdroot/indentLine'            " Show vertical indent lines
+Plugin 'valloric/MatchTagAlways'        " Highlight matching tags
 
 " General
 Plugin 'kien/ctrlp.vim'                 " Fuzzy file searching
@@ -62,17 +71,24 @@ Plugin 'tpope/vim-surround'             " Easily surround words with tags
 Plugin 'wesQ3/vim-windowswap'           " Easy swapping of windows
 Plugin 'jistr/vim-nerdtree-tabs'        " Making NERDTree better
 Plugin 'rking/ag.vim'                   " Searching text across file directory
-Plugin 'scrooloose/syntastic'           " Syntax checking for various languages
 Plugin 'Raimondi/delimitMate'           " Auto-complete brackets, parentheseses etc
 Plugin 'vim-scripts/vim-auto-save'      " Autosave file changes
 Plugin 'Valloric/YouCompleteMe'         " Autocomplete!
 Plugin 'tomtom/tcomment_vim'            " Easier commenting
 Plugin 'tpope/vim-fugitive'             " Git integration
+Plugin 'int3/vim-extradite'             " Browse and diff git commits
+Plugin 'scrooloose/syntastic'           " Syntax checking for various languages
+Plugin 'suan/vim-instant-markdown'      " Instant markdown in the browser
+Plugin 'kshenoy/vim-signature'          " Bookmarks
 
 " Ruby/Rails
 Plugin 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
 Plugin 'thoughtbot/vim-rspec'           " Run RSpec tests in Vim
 Plugin 'tpope/vim-rails'                " Rails support in Vim
+Plugin 'ck3g/vim-change-hash-syntax'    " Convert old hash syntax to new syntax
+
+" Elixir
+Plugin 'elixir-lang/vim-elixir'
 
 " JavaScript
 Plugin 'pangloss/vim-javascript'        " JavaScript highlighting
@@ -92,7 +108,6 @@ colorscheme monokai
 "           Plugin Settings
 "---------------------------------------------------------------
 syntax enable
-filetype plugin indent on               " load file type plugins + indentation
 
 "" CtrlP
 let g:ctrlp_map = '<c-p>'
@@ -114,6 +129,7 @@ let g:airline_theme='luna'
 let g:gitgutter_enabled = 1
 
 "" vim-fugitive
+set diffopt+=vertical                  " Veritcal splits for :Gdiff
 nnoremap <space>gs :Gstatus<CR>
 nnoremap <space>gb :Gblame<CR>
 
@@ -131,6 +147,9 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+
+"" vim-extradite
+let g:extradite_width = 175
 
 "" indentLine
 let g:indentLine_char = '|'
@@ -155,7 +174,8 @@ nmap <silent> <LEFT> :cprev<CR>
 
 "" Syntastic
 " Use MRI and Rubocop checkers for Ruby files
-let g:syntastic_ruby_checkers = ['rubocop', 'mri']
+let g:syntastic_ruby_checkers = ['rubocop']
+let g:syntastic_javascript_checkers = ['eslint']
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -163,14 +183,20 @@ set statusline+=%*
 
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
+
+let g:syntastic_mode_map = {
+        \ "mode": "passive",
+        \ "active_filetypes": [],
+        \ "passive_filetypes": ["ruby", "javascript"] }
 
 nnoremap <leader>z :SyntasticCheck<CR>
 nnoremap <leader>c :SyntasticReset<CR>    " Scan file again for syntax erors
 
 "" YouCompleteMe
 let g:ycm_add_preview_to_completeopt=0
+let g:ycm_register_as_syntastic_checker = 0
 let g:ycm_confirm_extra_conf=0
 set completeopt-=preview
 
