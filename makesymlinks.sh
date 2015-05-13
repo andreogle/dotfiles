@@ -27,8 +27,10 @@ mv ~/.vimrc ~/dotfiles_old/
 mv ~/.gvimrc ~/dotfiles_old/
 mv ~/.jshintrc ~/dotfiles_old/
 mv ~/.eslintrc ~/dotfiles_old/
+mv ~/.config/fish/config.fish ~/dotfiles_old/
 echo "Creating symlink to $file in home directory."
 ln -sf ~/dotfiles/.vimrc ~/.vimrc
 ln -sf ~/dotfiles/.gvimrc ~/.gvimrc
 ln -sf ~/dotfiles/.jshintrc ~/.jshintrc
 ln -sf ~/dotfiles/.eslintrc ~/.eslintrc
+ln -sf ~/dotfiles/config.fish ~/.config/fish/config.fish
