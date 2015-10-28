@@ -2,8 +2,7 @@
 "           General Settings
 "---------------------------------------------------------------
 set nocompatible                    " choose no compatibility with legacy vi
-
-set shell=/bin/sh
+set shell=/bin/bash
 
 set encoding=utf-8
 set showcmd                         " display incomplete commands
@@ -39,17 +38,17 @@ xnoremap p pgvy
 
 "" Automatically update vim when .vimrc is saved
 augroup myvimrchooks
-    au!
-    autocmd bufwritepost .vimrc source ~/.vimrc
+  au!
+  autocmd bufwritepost .vimrc source ~/.vimrc
 augroup END
 
 "---------------------------------------------------------------
 "             Plugins
 "---------------------------------------------------------------
-set rtp+=~/.vim/bundle/Vundle.vim       " Required for Vundle
+set rtp+=~/.nvim/bundle/Vundle.vim       " Required for Vundle
 call vundle#begin()
 
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 
 " Colour Schemes
 Plugin 'sickill/vim-monokai'
@@ -62,11 +61,11 @@ Plugin 'kien/rainbow_parentheses.vim'   " Colourful parentheses
 Plugin 'kchmck/vim-coffee-script'       " Coffeescript syntax
 Plugin 'slim-template/vim-slim'         " Vim slim support
 Plugin 'ntpeters/vim-better-whitespace' " Highlight trailing whitespace
-Plugin 'Yggdroot/indentLine'            " Show vertical indent lines
+"Plugin 'Yggdroot/indentLine'            " Show vertical indent lines
 Plugin 'valloric/MatchTagAlways'        " Highlight matching tags
 
 " General
-Plugin 'kien/ctrlp.vim'                 " Fuzzy file searching
+Plugin 'ctrlpvim/ctrlp.vim'                 " Fuzzy file searching
 Plugin 'scrooloose/nerdtree'            " View directory as a sidebar
 Plugin 'tpope/vim-surround'             " Easily surround words with tags
 Plugin 'wesQ3/vim-windowswap'           " Easy swapping of windows
@@ -80,7 +79,8 @@ Plugin 'tpope/vim-fugitive'             " Git integration
 Plugin 'int3/vim-extradite'             " Browse and diff git commits
 Plugin 'scrooloose/syntastic'           " Syntax checking for various languages
 Plugin 'suan/vim-instant-markdown'      " Instant markdown in the browser
-Plugin 'kshenoy/vim-signature'          " Bookmarks
+"Plugin 'kshenoy/vim-signature'          " Bookmarks
+Plugin 'leshill/vim-json'               " Better JSON support
 
 " Ruby/Rails
 Plugin 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
@@ -153,7 +153,7 @@ au Syntax * RainbowParenthesesLoadBraces
 let g:extradite_width = 175
 
 "" indentLine
-let g:indentLine_char = '|'
+"let g:indentLine_char = '|'
 
 "" ag.vim
 if executable('ag')
@@ -216,6 +216,11 @@ set splitright                         " Sets focus in new right window
 nnoremap <leader>s :vsplit<CR>         " Vertical split on the right side
 nnoremap <leader>hs :split<CR>         " Horizontal split on the bottom
 
+" Neovim terminal
+nnoremap <leader>e :term<CR>
+" This maps Leader + e to exit terminal mode.
+tnoremap <leader>e <C-\><C-n><CR>
+
 map  <C-l> :tabn<CR>                   " Next tab
 map  <C-h> :tabp<CR>                   " Previous tab
 map  <C-n> :tabnew<CR>                 " New tab
@@ -225,3 +230,39 @@ map <C-b> i<Cr><Esc>                   " Move text after cursor to next line
 " Retain selection when indenting
 vnoremap < <gv
 vnoremap > >gv
+
+" Tab label - file names only
+set tabline=%!MyTabLine()
+function MyTabLine()
+  let s = ''
+  for i in range(tabpagenr('$'))
+    " select the highlighting
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
+    " set the tab page number (for mouse clicks)
+    let s .= '%' . (i + 1) . 'T'
+
+    " the label is made by MyTabLabel()
+    let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
+  endfor
+
+  " after the last tab fill with TabLineFill and reset tab page nr
+  let s .= '%#TabLineFill#%T'
+
+  " right-align the label to close the current tab page
+  if tabpagenr('$') > 1
+    let s .= '%=%#TabLine#%999Xclose'
+  endif
+
+  return s
+endfunction
+
+function MyTabLabel(n)
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  let label =  bufname(buflist[winnr - 1])
+  return fnamemodify(label, ":t")
+endfunction
