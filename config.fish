@@ -32,13 +32,27 @@ end
 set PATH /Applications/Postgres.app/Contents/Versions/9.4/bin $PATH
 
 # business_app
-set -x SAURON_API_URL http://go2africa:UatBuHacAfv9UgR9@eye-master.go2africa.com
 set -x RAILS_ENV development
 set -x SIDEKIQ_DB_POOL 25
 set -x DB_POOL 5
 set -x LOG_LEVEL debug
+set -x SIDEKIQ_CONCURRENCY 25
 
 # Phoenix aliases
 function phoenix
     mix phoenix.server
 end
+
+# boot2docker
+set -x DOCKER_CERT_PATH /Users/andreogle/.boot2docker/certs/boot2docker-vm
+set -x DOCKER_TLS_VERIFY 1
+set -x DOCKER_HOST tcp://192.168.59.103:2376
+
+# Load other secret keys
+. ./keys.fish
+
+# Cucumber
+set -x LOCAL_CUKE true
+
+# Ansible
+set -x ANSIBLE_HOSTS /etc/ansible/hosts
