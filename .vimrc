@@ -5,8 +5,10 @@ set nocompatible                    " choose no compatibility with legacy vi
 set shell=/bin/bash
 
 set encoding=utf-8
-set showcmd                         " display incomplete commands
-set number
+set showcmd                               " display incomplete commands
+set relativenumber
+set cursorline                            " Highlight row
+set cursorcolumn                          " Highlight column
 
 "" Spacing
 set nowrap                          " don't wrap lines
@@ -32,7 +34,7 @@ set noswapfile
 set undofile
 
 "" Use system clipboard
-set clipboard=unnamedplus
+set clipboard+=unnamedplus
 
 "" Paste the same text multiple times using p
 xnoremap p pgvy
@@ -40,69 +42,78 @@ xnoremap p pgvy
 "---------------------------------------------------------------
 "             Plugins
 "---------------------------------------------------------------
-set rtp+=~/.vim/bundle/Vundle.vim       " Required for Vundle
-call vundle#begin()
-
-Plugin 'VundleVim/Vundle.vim'
+call plug#begin('~/.vim/plugged')
 
 " Colour Schemes
-Plugin 'sickill/vim-monokai'
-Plugin 'nanotech/jellybeans.vim'
+Plug 'NLKNguyen/papercolor-theme'
 
 " Aesthetics
-Plugin 'bling/vim-airline'              " A cooler status bar at the bottom
-Plugin 'airblade/vim-gitgutter'         " Show git changes in the gutter
-Plugin 'kien/rainbow_parentheses.vim'   " Colourful parentheses
-Plugin 'ntpeters/vim-better-whitespace' " Highlight trailing whitespace
-"Plugin 'Yggdroot/indentLine'           " Show vertical indent lines
-Plugin 'valloric/MatchTagAlways'        " Highlight matching tags
-Plugin 'sheerun/vim-polyglot'           " Language support
+Plug 'vim-airline/vim-airline'        " A cooler status bar at the bottom
+Plug 'vim-airline/vim-airline-themes' " A cooler status bar at the bottom
+Plug 'airblade/vim-gitgutter'         " Show git changes in the gutter
+Plug 'kien/rainbow_parentheses.vim'   " Colourful parentheses
+Plug 'ntpeters/vim-better-whitespace' " Highlight trailing whitespace
+Plug 'valloric/MatchTagAlways'        " Highlight matching tags
+Plug 'sheerun/vim-polyglot'           " Language support
 
 " General
-Plugin 'ctrlpvim/ctrlp.vim'             " Fuzzy file searching
-Plugin 'scrooloose/nerdtree'            " View directory as a sidebar
-Plugin 'tpope/vim-surround'             " Easily surround words with tags
-Plugin 'wesQ3/vim-windowswap'           " Easy swapping of windows
-Plugin 'jistr/vim-nerdtree-tabs'        " Making NERDTree better
-Plugin 'rking/ag.vim'                   " Searching text across file directory
-Plugin 'Raimondi/delimitMate'           " Auto-complete brackets, parentheseses etc
-Plugin 'vim-scripts/vim-auto-save'      " Autosave file changes
-Plugin 'Valloric/YouCompleteMe'         " Autocomplete!
-Plugin 'tomtom/tcomment_vim'            " Easier commenting
-Plugin 'tpope/vim-fugitive'             " Git integration
-Plugin 'int3/vim-extradite'             " Browse and diff git commits
-Plugin 'scrooloose/syntastic'           " Syntax checking for various languages
-Plugin 'suan/vim-instant-markdown'      " Instant markdown in the browser
-"Plugin 'kshenoy/vim-signature'          " Bookmarks
-Plugin 'leshill/vim-json'               " Better JSON support
+Plug 'ctrlpvim/ctrlp.vim'             " Fuzzy file searching
+Plug 'scrooloose/nerdtree'            " View directory as a sidebar
+Plug 'tpope/vim-surround'             " Easily surround words with tags
+Plug 'wesQ3/vim-windowswap'           " Easy swapping of windows
+Plug 'jistr/vim-nerdtree-tabs'        " Making NERDTree better
+Plug 'rking/ag.vim'                   " Searching text across file directory
+Plug 'Raimondi/delimitMate'           " Auto-complete brackets, parentheseses etc
+Plug 'vim-scripts/vim-auto-save'      " Autosave file changes
+Plug 'Valloric/YouCompleteMe'         " Autocomplete!
+Plug 'tomtom/tcomment_vim'            " Easier commenting
+Plug 'tpope/vim-fugitive'             " Git integration
+Plug 'int3/vim-extradite'             " Browse and diff git commits
+Plug 'scrooloose/syntastic'           " Syntax checking for various languages
+Plug 'suan/vim-instant-markdown'      " Instant markdown in the browser
+"Plug 'kshenoy/vim-signature'          " Bookmarks
+Plug 'leshill/vim-json'               " Better JSON support
 
 " Ruby/Rails
-Plugin 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
-Plugin 'thoughtbot/vim-rspec'           " Run RSpec tests in Vim
-Plugin 'tpope/vim-rails'                " Rails support in Vim
-Plugin 'ck3g/vim-change-hash-syntax'    " Convert old hash syntax to new syntax
+Plug 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
+Plug 'thoughtbot/vim-rspec'           " Run RSpec tests in Vim
+Plug 'tpope/vim-rails'                " Rails support in Vim
+Plug 'ck3g/vim-change-hash-syntax'    " Convert old hash syntax to new syntax
 
-call vundle#end()                       " required for Vundle
-filetype plugin indent on               " required for Vundle
+call plug#end()
+" filetype plugin indent on               " required for Vundle
+
+syntax enable
 
 "---------------------------------------------------------------
 "             Display
 "---------------------------------------------------------------
 set enc=utf-8
-set guifont=Droid\ Sans\ Mono:h15
-colorscheme monokai
+
+"set guifont=Droid\ Sans\ Mono:h15
+set background=dark
+colorscheme PaperColor
+
+"---------------------------------------------------------------
+"                      NeoVim Specific
+"---------------------------------------------------------------
+
+if has('nvim')
+  "let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  " Neovim terminal
+  " nnoremap <leader>e :term<CR>
+  " This maps Leader + e to exit terminal mode.
+  " tnoremap <leader>e <C-\><C-n><CR>
+end
 
 "---------------------------------------------------------------
 "           Plugin Settings
 "---------------------------------------------------------------
-syntax enable
-
 "" CtrlP
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_working_path_mode = 0       " Only search the directory we started Vim in
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip      " Linux/MacOSX
-set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe   " Windows
+let g:ctrlp_working_path_mode = 0           " Only search the directory we started Vim in
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip    " Linux/MacOSX
 
 "" NERDTree
 let NERDTreeShowHidden=1
@@ -111,7 +122,7 @@ autocmd VimEnter * wincmd p            " Set cursor to active buffer
 map <leader>r :NERDTreeFind<cr>
 
 "" Airline
-let g:airline_theme='luna'
+let g:airline_theme='simple'
 
 "" Git-Gutter
 let g:gitgutter_enabled = 1
@@ -137,9 +148,6 @@ au Syntax * RainbowParenthesesLoadBraces
 
 "" vim-extradite
 let g:extradite_width = 175
-
-"" indentLine
-"let g:indentLine_char = '|'
 
 "" ag.vim
 if executable('ag')
@@ -176,7 +184,7 @@ let g:syntastic_check_on_wq = 0
 let g:syntastic_mode_map = {
         \ "mode": "passive",
         \ "active_filetypes": [],
-        \ "passive_filetypes": ["ruby", "javascript"] }
+        \ "passive_filetypes": ["ruby", "javascript", "elixir"] }
 
 nnoremap <leader>z :SyntasticCheck<CR>
 nnoremap <leader>c :SyntasticReset<CR>    " Scan file again for syntax erors
@@ -211,6 +219,9 @@ map <C-b> i<Cr><Esc>                   " Move text after cursor to next line
 " Retain selection when indenting
 vnoremap < <gv
 vnoremap > >gv
+
+autocmd InsertEnter * :set number         " Set absolute numbering while in insert mode
+autocmd InsertLeave * :set relativenumber " Set relative numbering while out of insert mode
 
 " Tab label - file names only
 set tabline=%!MyTabLine()
@@ -248,12 +259,14 @@ function MyTabLabel(n)
   return fnamemodify(label, ":t")
 endfunction
 
-"---------------------------------------------------------------
-"                      NeoVim Specific
-"---------------------------------------------------------------
-if has('nvim')
-  " Neovim terminal
-  nnoremap <leader>e :term<CR>
-  " This maps Leader + e to exit terminal mode.
-  tnoremap <leader>e <C-\><C-n><CR>
-end
+nnoremap <leader>ei :%s/var \(\w\+\)\s*=\s*require(\('.\+'\));/import \1 from \2;/ge<CR>
+nnoremap <leader>ef :%s/:\s*function\s*//ge<CR>
+nnoremap <leader>eu :%s/\(\W\)_\(\w\+\)/\1\2/ge<CR>
+nnoremap <leader>ee :%s/module\.exports\s*=/export default/ge<CR>
+nnoremap <leader>ec :%s/var\s\(\w\+\)\s*=\s*React.createClass(/class \1 extends React.Component /ge<CR>
+nnoremap <leader>ev :%s/var\s/const /ge<CR>
+nnoremap <leader>er :%s/'use strict';\n*//ge<CR>
+map <leader>es <leader>ei <bar> <leader>ef <bar> <leader>eu <bar> <leader>ee <bar> <leader>ec <bar> <leader>ev <bar> <leader>er
+nnoremap <leader>el :%s/const\s/let /gc<CR>
+nnoremap <leader>e, :%s/\(\s\)},/\1}/gc<CR>
+

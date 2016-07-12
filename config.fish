@@ -28,6 +28,10 @@ end
 function fish_right_prompt
 end
 
+# RVM path
+set PATH /Users/andreogle/.rvm/gems/ruby-2.3.0/bin $PATH
+rmv default
+
 # psql
 set PATH /Applications/Postgres.app/Contents/Versions/9.4/bin $PATH
 
@@ -56,3 +60,11 @@ set -x LOCAL_CUKE true
 
 # Ansible
 set -x ANSIBLE_HOSTS /etc/ansible/hosts
+
+# Thefuck
+eval (thefuck --alias | tr '\n' ';')
+
+# NVM
+set -x NVM_DIR "$HOME/.nvm"
+source ~/.config/fish/nvm-wrapper/nvm.fish
+
