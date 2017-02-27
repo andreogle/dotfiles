@@ -10,6 +10,10 @@ set relativenumber
 set cursorline                            " Highlight row
 set cursorcolumn                          " Highlight column
 
+"" Python Support
+let g:python2_host_prog = '/usr/local/bin/python'
+let g:python3_host_prog = '/usr/local/bin/python3'
+
 "" Spacing
 set nowrap                          " don't wrap lines
 set tabstop=2 shiftwidth=2          " a tab is two spaces (or set this to 4)
@@ -25,7 +29,7 @@ set smartcase                           " ... unless they contain at least one c
 nnoremap <silent> <C-a> :nohl<CR><C-l>  " <Ctrl-a> redraws the screen and removes any search highlighting.
 
 "" Keybindings
-let mapleader=","                   " change <leader> to ',' instead of '\'
+let mapleader=","                        " change <leader> to ',' instead of '\'
 
 "" No swap files
 set noswapfile
@@ -38,6 +42,8 @@ set clipboard+=unnamedplus
 
 "" Paste the same text multiple times using p
 xnoremap p pgvy
+
+filetype plugin on
 
 "---------------------------------------------------------------
 "             Plugins
@@ -57,31 +63,32 @@ Plug 'valloric/MatchTagAlways'        " Highlight matching tags
 Plug 'sheerun/vim-polyglot'           " Language support
 
 " General
-Plug 'ctrlpvim/ctrlp.vim'             " Fuzzy file searching
-Plug 'scrooloose/nerdtree'            " View directory as a sidebar
-Plug 'tpope/vim-surround'             " Easily surround words with tags
-Plug 'wesQ3/vim-windowswap'           " Easy swapping of windows
-Plug 'jistr/vim-nerdtree-tabs'        " Making NERDTree better
-Plug 'rking/ag.vim'                   " Searching text across file directory
-Plug 'Raimondi/delimitMate'           " Auto-complete brackets, parentheseses etc
-Plug 'vim-scripts/vim-auto-save'      " Autosave file changes
-Plug 'Valloric/YouCompleteMe'         " Autocomplete!
-Plug 'tomtom/tcomment_vim'            " Easier commenting
-Plug 'tpope/vim-fugitive'             " Git integration
-Plug 'int3/vim-extradite'             " Browse and diff git commits
-Plug 'scrooloose/syntastic'           " Syntax checking for various languages
-Plug 'suan/vim-instant-markdown'      " Instant markdown in the browser
-"Plug 'kshenoy/vim-signature'          " Bookmarks
-Plug 'leshill/vim-json'               " Better JSON support
+Plug 'ctrlpvim/ctrlp.vim'                        " Fuzzy file searching
+Plug 'scrooloose/nerdtree'                       " View directory as a sidebar
+Plug 'tpope/vim-surround'                        " Easily surround words with tags
+Plug 'wesQ3/vim-windowswap'                      " Easy swapping of windows
+Plug 'jistr/vim-nerdtree-tabs'                   " Making NERDTree better
+Plug 'rking/ag.vim'                              " Searching text across file directory
+Plug 'Raimondi/delimitMate'                      " Auto-complete brackets, parentheseses etc
+Plug 'vim-scripts/vim-auto-save'                 " Autosave file changes
+Plug 'tomtom/tcomment_vim'                       " Easier commenting
+Plug 'tpope/vim-fugitive'                        " Git integration
+Plug 'int3/vim-extradite'                        " Browse and diff git commits
+Plug 'neovim/node-host', { 'do': 'npm install' } " Needed for mdown.vim
+Plug 'vimlab/mdown.vim', { 'do': 'npm install' } " Live MarkDown previews
+Plug 'leshill/vim-json'                          " Better JSON support
 
 " Ruby/Rails
 Plug 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
-Plug 'thoughtbot/vim-rspec'           " Run RSpec tests in Vim
 Plug 'tpope/vim-rails'                " Rails support in Vim
 Plug 'ck3g/vim-change-hash-syntax'    " Convert old hash syntax to new syntax
 
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+
 call plug#end()
-" filetype plugin indent on               " required for Vundle
 
 syntax enable
 
@@ -99,11 +106,7 @@ colorscheme PaperColor
 "---------------------------------------------------------------
 
 if has('nvim')
-  "let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-  " Neovim terminal
-  " nnoremap <leader>e :term<CR>
-  " This maps Leader + e to exit terminal mode.
-  " tnoremap <leader>e <C-\><C-n><CR>
+  " Any NeoVim specific settings
 end
 
 "---------------------------------------------------------------
@@ -167,33 +170,12 @@ nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 nmap <silent> <RIGHT> :cnext<CR>
 nmap <silent> <LEFT> :cprev<CR>
 
-"" Syntastic
-" Use MRI and Rubocop checkers for Ruby files
-let g:syntastic_ruby_checkers = ['rubocop']
-let g:syntastic_javascript_checkers = ['eslint']
+"" deoplete
+let g:deoplete#enable_at_startup = 1
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>" " Use tab to scroll through suggestions
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-
-let g:syntastic_mode_map = {
-        \ "mode": "passive",
-        \ "active_filetypes": [],
-        \ "passive_filetypes": ["ruby", "javascript", "elixir"] }
-
-nnoremap <leader>z :SyntasticCheck<CR>
-nnoremap <leader>c :SyntasticReset<CR>    " Scan file again for syntax erors
-
-"" YouCompleteMe
-let g:ycm_add_preview_to_completeopt=0
-let g:ycm_register_as_syntastic_checker = 0
-let g:ycm_confirm_extra_conf=0
-set completeopt-=preview
+"" mdown.vim
+nnoremap <leader>ip :Mpreview<CR>      " View markdown preview in browser
 
 "---------------------------------------------------------------
 "           Other Key bindings and Settings
@@ -258,15 +240,4 @@ function MyTabLabel(n)
   let label =  bufname(buflist[winnr - 1])
   return fnamemodify(label, ":t")
 endfunction
-
-nnoremap <leader>ei :%s/var \(\w\+\)\s*=\s*require(\('.\+'\));/import \1 from \2;/ge<CR>
-nnoremap <leader>ef :%s/:\s*function\s*//ge<CR>
-nnoremap <leader>eu :%s/\(\W\)_\(\w\+\)/\1\2/ge<CR>
-nnoremap <leader>ee :%s/module\.exports\s*=/export default/ge<CR>
-nnoremap <leader>ec :%s/var\s\(\w\+\)\s*=\s*React.createClass(/class \1 extends React.Component /ge<CR>
-nnoremap <leader>ev :%s/var\s/const /ge<CR>
-nnoremap <leader>er :%s/'use strict';\n*//ge<CR>
-map <leader>es <leader>ei <bar> <leader>ef <bar> <leader>eu <bar> <leader>ee <bar> <leader>ec <bar> <leader>ev <bar> <leader>er
-nnoremap <leader>el :%s/const\s/let /gc<CR>
-nnoremap <leader>e, :%s/\(\s\)},/\1}/gc<CR>
 
