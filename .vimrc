@@ -1,3 +1,9 @@
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
 "---------------------------------------------------------------
 "           General Settings
 "---------------------------------------------------------------
@@ -26,7 +32,7 @@ set hlsearch                            " highlight matches
 set incsearch                           " incremental searching
 set ignorecase                          " searches are case insensitive...
 set smartcase                           " ... unless they contain at least one capital letter
-nnoremap <silent> <C-a> :nohl<CR><C-l>  " <Ctrl-a> redraws the screen and removes any search highlighting.
+nnoremap <silent> <C-x> :nohl<CR><C-l>  " <Ctrl-x> redraws the screen and removes any search highlighting.
 
 "" Keybindings
 let mapleader=","                        " change <leader> to ',' instead of '\'
