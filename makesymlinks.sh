@@ -24,7 +24,11 @@ echo "...done"
 # move any existing dotfiles in homedir to dotfiles_old directory, then create symlinks
 echo "Moving any existing dotfiles from ~ to $olddir"
 mv ~/.vimrc ~/dotfiles_old/
+mv ~/.config/nvim/init.vim ~/dotfiles_old/
+
 echo "Creating symlink to $file in home directory."
 ln -sf ~/dotfiles/.vimrc ~/.vimrc
 ln -sf ~/dotfiles/.vimrc ~/.config/nvim/init.vim
+ln -sf ~/dotfiles/start-baz.sh ~/start-baz.sh
+chmod u+x ~/start-baz.sh
 
