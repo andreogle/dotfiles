@@ -74,7 +74,7 @@ Plug 'ap/vim-css-color'               " Highlight CSS colors
 
 " General
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
-Plug 'junegunn/fzf.vim'                          " Fuzzy searchings
+Plug 'junegunn/fzf.vim'                          " Fuzzy file searching
 Plug 'scrooloose/nerdtree'                       " View directory as a sidebar
 Plug 'tpope/vim-surround'                        " Easily surround words with tags
 Plug 'wesQ3/vim-windowswap'                      " Easy swapping of windows
@@ -91,7 +91,7 @@ Plug 'leshill/vim-json'                          " Better JSON support
 
 " Ruby/Rails
 Plug 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
-"Plug 'ck3g/vim-change-hash-syntax'    " Convert old hash syntax to new syntax
+Plug 'ck3g/vim-change-hash-syntax'    " Convert old hash syntax to new syntax
 
 function! DoRemote(arg)
   UpdateRemotePlugins
@@ -162,8 +162,8 @@ let g:extradite_width = 175
 
 "" ripgrep
 " https://medium.com/@crashybang/supercharge-vim-with-fzf-and-ripgrep-d4661fc853d2
-" Use :Find <searchterm>
-command! -bang -nargs=* Find call fzf#vim#grep('
+" Use ':F <searchteam>' to search for instances of a word
+command! -bang -nargs=* F call fzf#vim#grep('
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow
   \ --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 
