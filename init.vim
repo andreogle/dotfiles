@@ -44,7 +44,10 @@ set noswapfile
 set undofile
 
 "" Use system clipboard
-set clipboard+=unnamedplus
+set clipboard=unnamed
+
+"" Mouse
+set mouse=a
 
 "" Paste the same text multiple times using p
 xnoremap p pgvy
@@ -67,9 +70,11 @@ Plug 'kien/rainbow_parentheses.vim'   " Colourful parentheses
 Plug 'ntpeters/vim-better-whitespace' " Highlight trailing whitespace
 Plug 'valloric/MatchTagAlways'        " Highlight matching tags
 Plug 'sheerun/vim-polyglot'           " Language support
+Plug 'ap/vim-css-color'               " Highlight CSS colors
 
 " General
-Plug 'ctrlpvim/ctrlp.vim'                        " Fuzzy file searching
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'                          " Fuzzy searchings
 Plug 'scrooloose/nerdtree'                       " View directory as a sidebar
 Plug 'tpope/vim-surround'                        " Easily surround words with tags
 Plug 'wesQ3/vim-windowswap'                      " Easy swapping of windows
@@ -86,8 +91,7 @@ Plug 'leshill/vim-json'                          " Better JSON support
 
 " Ruby/Rails
 Plug 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
-Plug 'tpope/vim-rails'                " Rails support in Vim
-Plug 'ck3g/vim-change-hash-syntax'    " Convert old hash syntax to new syntax
+"Plug 'ck3g/vim-change-hash-syntax'    " Convert old hash syntax to new syntax
 
 function! DoRemote(arg)
   UpdateRemotePlugins
@@ -118,11 +122,9 @@ end
 "---------------------------------------------------------------
 "           Plugin Settings
 "---------------------------------------------------------------
-"" CtrlP
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_working_path_mode = 0           " Only search the directory we started Vim in
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip    " Linux/MacOSX
+"" fzf
+set rtp+=/usr/local/opt/fzf
+map  <C-p> :Files<CR>
 
 "" NERDTree
 let NERDTreeShowHidden=1
@@ -158,21 +160,18 @@ au Syntax * RainbowParenthesesLoadBraces
 "" vim-extradite
 let g:extradite_width = 175
 
-"" ag.vim
-if executable('ag')
-  " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
-
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-endif
+"" ripgrep
+" https://medium.com/@crashybang/supercharge-vim-with-fzf-and-ripgrep-d4661fc853d2
+" Use :Find <searchterm>
+command! -bang -nargs=* Find call fzf#vim#grep('
+  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow
+  \ --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 
 " use K to grep word under cursor
+set grepprg=rg\ --vimgrep
 nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
+" scroll through searches with left/right
 nmap <silent> <RIGHT> :cnext<CR>
 nmap <silent> <LEFT> :cprev<CR>
 
