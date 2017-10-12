@@ -7,12 +7,11 @@ endif
 "---------------------------------------------------------------
 "           General Settings
 "---------------------------------------------------------------
-set nocompatible                    " choose no compatibility with legacy vi
+set nocompatible                          " choose no compatibility with legacy vi
 set shell=/bin/bash
-
 set encoding=utf-8
 set showcmd                               " display incomplete commands
-set relativenumber
+set relativenumber                        " display line numbers relative to currently selected row
 set cursorline                            " Highlight row
 set cursorcolumn                          " Highlight column
 
@@ -53,6 +52,8 @@ set mouse=a
 xnoremap p pgvy
 
 filetype plugin on
+filetype plugin indent on
+syntax on
 
 "---------------------------------------------------------------
 "             Plugins
@@ -89,6 +90,10 @@ Plug 'neovim/node-host', { 'do': 'npm install' } " Needed for mdown.vim
 Plug 'vimlab/mdown.vim', { 'do': 'npm install' } " Live MarkDown previews
 Plug 'leshill/vim-json'                          " Better JSON support
 
+" Golang
+Plug 'fatih/vim-go'
+Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
+
 " Ruby/Rails
 Plug 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
 Plug 'ck3g/vim-change-hash-syntax'    " Convert old hash syntax to new syntax
@@ -97,6 +102,7 @@ function! DoRemote(arg)
   UpdateRemotePlugins
 endfunction
 Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+Plug 'zchee/deoplete-go', { 'do': 'make' }
 
 call plug#end()
 
@@ -106,13 +112,17 @@ syntax enable
 "             Display
 "---------------------------------------------------------------
 set enc=utf-8
-
-"set guifont=Droid\ Sans\ Mono:h15
 set background=dark
 colorscheme PaperColor
 
 "---------------------------------------------------------------
-"                      NeoVim Specific
+"             Language Specific
+"---------------------------------------------------------------
+" Golang
+autocmd Filetype go setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+
+"---------------------------------------------------------------
+"             NeoVim Specific
 "---------------------------------------------------------------
 
 if has('nvim')
@@ -120,7 +130,7 @@ if has('nvim')
 end
 
 "---------------------------------------------------------------
-"           Plugin Settings
+"             Plugin Settings
 "---------------------------------------------------------------
 "" fzf
 set rtp+=/usr/local/opt/fzf
@@ -165,7 +175,7 @@ let g:extradite_width = 175
 " Use ':F <searchteam>' to search for instances of a word
 command! -bang -nargs=* F call fzf#vim#grep('
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow
-  \ --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+  \ --glob "!{.git,node_modules,_build,log,coverage,deps,public}/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 
 " use K to grep word under cursor
 set grepprg=rg\ --vimgrep
