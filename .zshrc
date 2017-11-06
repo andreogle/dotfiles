@@ -7,7 +7,14 @@ export ZSH=/Users/andreogle/.oh-my-zsh
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME=agnoster
+ZSH_THEME="agnoster"
+
+# Set list of themes to load
+# Setting this variable when ZSH_THEME=random
+# cause zsh load theme from this variable instead of
+# looking in ~/.oh-my-zsh/themes/
+# An empty array have no effect
+# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -92,6 +99,15 @@ prompt_context () { }
 export PATH="$HOME/.rbenv/bin:$PATH"
 eval "$(rbenv init -)"
 
+# Postgres
+export PATH="/Applications/Postgres.app/Contents/Versions/9.6/bin:$PATH"
+
+# Go
+export GOPATH=$HOME/Development/go
+export GOROOT=/usr/local/go/bin
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
+
 # Project config
 export RAILS_ENV=development
 export NODE_ENV=development
@@ -100,6 +116,6 @@ export MIX_ENV=dev
 # thefuck
 eval $(thefuck --alias)
 
-# fzf 
+# fzf (also requires ripgrep)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='rg --files --hidden --smart-case --glob "!{.git,node_modules}/*"'
