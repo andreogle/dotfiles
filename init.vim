@@ -1,9 +1,3 @@
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
 "---------------------------------------------------------------
 "           General Settings
 "---------------------------------------------------------------
@@ -12,8 +6,8 @@ set shell=/bin/bash
 set encoding=utf-8
 set showcmd                               " display incomplete commands
 set relativenumber                        " display line numbers relative to currently selected row
-set cursorline                            " Highlight row
-set cursorcolumn                          " Highlight column
+" set cursorline                            " Highlight row
+" set cursorcolumn                          " Highlight column
 
 "" Python Support
 let g:python2_host_prog = '/usr/local/bin/python'
@@ -58,10 +52,12 @@ syntax on
 "---------------------------------------------------------------
 "             Plugins
 "---------------------------------------------------------------
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.local/share/nvim/plugged')
 
 " Colour Schemes
-Plug 'NLKNguyen/papercolor-theme'
+" Plug 'NLKNguyen/papercolor-theme'
+" Plug 'whatyouhide/vim-gotham'
+Plug 'arcticicestudio/nord-vim'
 
 " Aesthetics
 Plug 'vim-airline/vim-airline'        " A cooler status bar at the bottom
@@ -86,8 +82,6 @@ Plug 'vim-scripts/vim-auto-save'                 " Autosave file changes
 Plug 'tomtom/tcomment_vim'                       " Easier commenting
 Plug 'tpope/vim-fugitive'                        " Git integration
 Plug 'int3/vim-extradite'                        " Browse and diff git commits
-Plug 'neovim/node-host', { 'do': 'npm install' } " Needed for mdown.vim
-Plug 'vimlab/mdown.vim', { 'do': 'npm install' } " Live MarkDown previews
 Plug 'leshill/vim-json'                          " Better JSON support
 
 " Golang
@@ -97,6 +91,12 @@ Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/sy
 " Ruby/Rails
 Plug 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
 Plug 'ck3g/vim-change-hash-syntax'    " Convert old hash syntax to new syntax
+
+" TypeScript
+" Plug 'mhartington/nvim-typescript'
+
+" Solidity
+Plug 'tomlion/vim-solidity'
 
 function! DoRemote(arg)
   UpdateRemotePlugins
@@ -112,22 +112,16 @@ syntax enable
 "             Display
 "---------------------------------------------------------------
 set enc=utf-8
-set background=dark
-colorscheme PaperColor
+"set background=dark
+"let g:gotham_airline_emphasised_insert = 0
+colorscheme nord
 
 "---------------------------------------------------------------
 "             Language Specific
 "---------------------------------------------------------------
 " Golang
 autocmd Filetype go setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
-
-"---------------------------------------------------------------
-"             NeoVim Specific
-"---------------------------------------------------------------
-
-if has('nvim')
-  " Any NeoVim specific settings
-end
+map <leader>gi :GoImports<cr>
 
 "---------------------------------------------------------------
 "             Plugin Settings
@@ -175,7 +169,8 @@ let g:extradite_width = 175
 " Use ':F <searchteam>' to search for instances of a word
 command! -bang -nargs=* F call fzf#vim#grep('
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow
-  \ --glob "!{.git,node_modules,_build,log,coverage,deps,public}/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+  \ --glob "!{.git,node_modules,_build,log,coverage,deps,public,dist,vendor,.next,tmp,apps/nassau/assets/node_modules}/*"
+  \ --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 
 " use K to grep word under cursor
 set grepprg=rg\ --vimgrep
@@ -187,18 +182,16 @@ nmap <silent> <LEFT> :cprev<CR>
 
 "" deoplete
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#file#enable_buffer_path = 1
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>" " Use tab to scroll through suggestions
-
-"" mdown.vim
-nnoremap <leader>ip :Mpreview<CR>      " View markdown preview in browser
 
 "---------------------------------------------------------------
 "           Other Key bindings and Settings
 "---------------------------------------------------------------
 "" Change background for any lines after 80
-execute "set colorcolumn=" . join(range(81,335), ',')
+"execute "set colorcolumn=" . join(range(81,335), ',')
 " Enable below for jellybeans colour scheme
-" hi ColorColumn ctermbg=darkgray guibg=gray15
+"hi ColorColumn ctermbg=17 guibg=gray15
 
 " Easier window splitting
 set splitbelow                         " Sets focus in new bottom window
@@ -206,6 +199,7 @@ set splitright                         " Sets focus in new right window
 
 nnoremap <leader>s :vsplit<CR>         " Vertical split on the right side
 nnoremap <leader>hs :split<CR>         " Horizontal split on the bottom
+nnoremap <leader>c :%s/\r//g<CR>       " Remove weird space characters
 
 map  <C-l> :tabn<CR>                   " Next tab
 map  <C-h> :tabp<CR>                   " Previous tab
@@ -255,4 +249,3 @@ function MyTabLabel(n)
   let label =  bufname(buflist[winnr - 1])
   return fnamemodify(label, ":t")
 endfunction
-
