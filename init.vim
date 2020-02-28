@@ -67,7 +67,6 @@ Plug 'kien/rainbow_parentheses.vim'   " Colourful parentheses
 Plug 'ntpeters/vim-better-whitespace' " Highlight trailing whitespace
 Plug 'valloric/MatchTagAlways'        " Highlight matching tags
 Plug 'sheerun/vim-polyglot'           " Language support
-Plug 'ap/vim-css-color'               " Highlight CSS colors
 
 " General
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -82,27 +81,10 @@ Plug 'vim-scripts/vim-auto-save'                 " Autosave file changes
 Plug 'tomtom/tcomment_vim'                       " Easier commenting
 Plug 'tpope/vim-fugitive'                        " Git integration
 Plug 'int3/vim-extradite'                        " Browse and diff git commits
-Plug 'leshill/vim-json'                          " Better JSON support
+Plug 'tpope/vim-endwise'                         " Add end after if, do, def keywords
 
-" Golang
-Plug 'fatih/vim-go'
-Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
-
-" Ruby/Rails
-Plug 'tpope/vim-endwise'              " Add 'end' after 'if', 'do', 'def' keywords
-Plug 'ck3g/vim-change-hash-syntax'    " Convert old hash syntax to new syntax
-
-" TypeScript
-" Plug 'mhartington/nvim-typescript'
-
-" Solidity
-Plug 'tomlion/vim-solidity'
-
-function! DoRemote(arg)
-  UpdateRemotePlugins
-endfunction
-Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
-Plug 'zchee/deoplete-go', { 'do': 'make' }
+" Make vim more like an IDE
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
@@ -115,13 +97,6 @@ set enc=utf-8
 "set background=dark
 "let g:gotham_airline_emphasised_insert = 0
 colorscheme nord
-
-"---------------------------------------------------------------
-"             Language Specific
-"---------------------------------------------------------------
-" Golang
-autocmd Filetype go setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
-map <leader>gi :GoImports<cr>
 
 "---------------------------------------------------------------
 "             Plugin Settings
@@ -169,7 +144,7 @@ let g:extradite_width = 175
 " Use ':F <searchteam>' to search for instances of a word
 command! -bang -nargs=* F call fzf#vim#grep('
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow
-  \ --glob "!{.git,node_modules,_build,log,coverage,deps,public,dist,vendor,.next,tmp,apps/nassau/assets/node_modules}/*"
+  \ --glob "!{.git,node_modules,_build,log,coverage,deps,public,dist,vendor,.next,.elixir_ls,tmp,app/node_modules,priv/static,assets/node_modules}/*"
   \ --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 
 " use K to grep word under cursor
