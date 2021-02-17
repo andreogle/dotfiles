@@ -10,8 +10,8 @@ set relativenumber                        " display line numbers relative to cur
 " set cursorcolumn                          " Highlight column
 
 "" Python Support
-let g:python2_host_prog = '/usr/local/bin/python'
-let g:python3_host_prog = '/usr/local/bin/python3'
+let g:python2_host_prog = '/usr/bin/python'
+let g:python3_host_prog = '/usr/bin/python3'
 
 "" Spacing
 set nowrap                          " don't wrap lines
@@ -46,13 +46,13 @@ set mouse=a
 xnoremap p pgvy
 
 filetype plugin on
-filetype plugin indent on
+" filetype plugin indent on
 syntax on
 
 "---------------------------------------------------------------
 "             Plugins
 "---------------------------------------------------------------
-call plug#begin('~/.local/share/nvim/plugged')
+call plug#begin('~/.nvim/plugged')
 
 " Colour Schemes
 " Plug 'NLKNguyen/papercolor-theme'
@@ -65,7 +65,7 @@ Plug 'vim-airline/vim-airline-themes' " A cooler status bar at the bottom
 Plug 'airblade/vim-gitgutter'         " Show git changes in the gutter
 Plug 'kien/rainbow_parentheses.vim'   " Colourful parentheses
 Plug 'ntpeters/vim-better-whitespace' " Highlight trailing whitespace
-Plug 'valloric/MatchTagAlways'        " Highlight matching tags
+" Plug 'valloric/MatchTagAlways'        " Highlight matching tags
 Plug 'sheerun/vim-polyglot'           " Language support
 
 " General
@@ -143,8 +143,8 @@ let g:extradite_width = 175
 " https://medium.com/@crashybang/supercharge-vim-with-fzf-and-ripgrep-d4661fc853d2
 " Use ':F <searchteam>' to search for instances of a word
 command! -bang -nargs=* F call fzf#vim#grep('
-  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow
-  \ --glob "!{.git,node_modules,_build,log,coverage,deps,public,dist,vendor,.next,.elixir_ls,tmp,app/node_modules,priv/static,assets/node_modules}/*"
+  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow
+  \ --glob "!{.git,node_modules,_build,log,coverage,deps,package-lock.json,public,dist,vendor,.next,.elixir_ls,tmp,app/node_modules,priv/static}/*"
   \ --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 
 " use K to grep word under cursor
