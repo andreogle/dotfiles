@@ -102,8 +102,9 @@ colorscheme nord
 "             Plugin Settings
 "---------------------------------------------------------------
 "" fzf
-set rtp+=/usr/local/opt/fzf
+set rtp+=/usr/bin/fzf
 map  <C-p> :Files<CR>
+let g:fzf_layout = { 'down': '40%' }
 
 "" NERDTree
 let NERDTreeShowHidden=1
@@ -154,11 +155,6 @@ nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 " scroll through searches with left/right
 nmap <silent> <RIGHT> :cnext<CR>
 nmap <silent> <LEFT> :cprev<CR>
-
-"" deoplete
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#file#enable_buffer_path = 1
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>" " Use tab to scroll through suggestions
 
 "---------------------------------------------------------------
 "           Other Key bindings and Settings
@@ -224,3 +220,4 @@ function MyTabLabel(n)
   let label =  bufname(buflist[winnr - 1])
   return fnamemodify(label, ":t")
 endfunction
+
